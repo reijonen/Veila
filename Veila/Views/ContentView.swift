@@ -32,7 +32,7 @@ struct ContentView: View {
 				SubscriptionsView()
 			case .channel:
 				ChannelView(currentChannelID: $currentChannelID, currentVideoID: $currentVideoID, selection: $selection)
-					.id(currentChannelID)
+//					.id(currentChannelID)
 			case .search:
 				SearchView(isSearching: $isSearching, searchResults: $searchResults, selection: $selection, currentVideoID: $currentVideoID, currentChannelID: $currentChannelID)
 //			case .playlists:

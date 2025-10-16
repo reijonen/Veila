@@ -11,6 +11,9 @@ struct ChannelView: View {
 	@State private var isLoading: Bool = true
 	@State private var errorMessage: String? = nil
 
+	@State private var isFetchingNewData = false
+	@State private var lastChannel: Channel? = nil
+
 	@Environment(\.modelContext) private var modelContext
 	@Query(sort: \Subscription.title) var subscriptions: [Subscription]
 
@@ -61,10 +64,7 @@ struct ChannelView: View {
 
 	var body: some View {
 		Group {
-			if isLoading {
-				ProgressView("Loading channel...")
-					.frame(maxWidth: .infinity, maxHeight: .infinity)
-			} else if let channel = channel {
+			if let channel = isFetchingNewData ? lastChannel : channel {
 				ScrollView {
 					VStack(spacing: 16) {
 						KFImage(channel.bannerURL)
@@ -117,25 +117,36 @@ struct ChannelView: View {
 						}
 					}
 				}
+			} else if isFetchingNewData || isLoading {
+				ProgressView("Loading channel...")
+					.frame(maxWidth: .infinity, maxHeight: .infinity)
 			} else if let errorMessage = errorMessage {
 				Text("Error: \(errorMessage)")
 					.foregroundColor(.red)
 					.multilineTextAlignment(.center)
 			}
 		}
-		.task() {
+		.task(id: currentChannelID) {
 			await fetchChannel()
 		}
+		.onChange(of: channel) { newChannel in
+			if let ch = newChannel {
+				print("Channel updated: \(ch.title) (ID: \(ch.id))")
+			}
+		}
+
 	}
 
 	private func fetchChannel() async {
+		isFetchingNewData = true
+		lastChannel = channel // keep old data
 		do {
-			channel = try await ContentService.shared.getChannel(id: currentChannelID)
-			print("Channel:", channel!)
+			let newChannel = try await ContentService.shared.getChannel(id: currentChannelID)
+			channel = newChannel
 		} catch {
-			print("ERROR:", error)
 			errorMessage = error.localizedDescription
 		}
+		isFetchingNewData = false
 		isLoading = false
 	}
 }
