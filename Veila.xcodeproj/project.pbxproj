@@ -7,9 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		97DA94D52E9DCECA000F3DF5 /* main.py in Resources */ = {isa = PBXBuildFile; fileRef = 97DA94D42E9DCECA000F3DF5 /* main.py */; };
+		9766ED952EA0A6960059519C /* site-packages in Resources */ = {isa = PBXBuildFile; fileRef = 9766ED942EA0A6960059519C /* site-packages */; };
+		9766ED972EA0A6AB0059519C /* main.py in Resources */ = {isa = PBXBuildFile; fileRef = 9766ED962EA0A6AB0059519C /* main.py */; };
+		9766F5142EA0B97C0059519C /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 9766F5132EA0B97C0059519C /* Kingfisher */; };
 		97DA94E42E9DD61F000F3DF5 /* Python.framework in Resources */ = {isa = PBXBuildFile; fileRef = 97DA94E32E9DD61F000F3DF5 /* Python.framework */; };
-		97DA94EA2E9DD7BD000F3DF5 /* site-packages in Resources */ = {isa = PBXBuildFile; fileRef = 97DA94E92E9DD7BC000F3DF5 /* site-packages */; };
 		97DA94EC2E9DDDF8000F3DF5 /* cert.pem in Resources */ = {isa = PBXBuildFile; fileRef = 97DA94EB2E9DDDF8000F3DF5 /* cert.pem */; };
 /* End PBXBuildFile section */
 
@@ -31,9 +32,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		97DA94D42E9DCECA000F3DF5 /* main.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = main.py; path = YoutubeService/main.py; sourceTree = "<group>"; };
+		9766ED942EA0A6960059519C /* site-packages */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "site-packages"; path = "ContentService/venv/lib/python3.14/site-packages"; sourceTree = "<group>"; };
+		9766ED962EA0A6AB0059519C /* main.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = main.py; path = ContentService/main.py; sourceTree = "<group>"; };
 		97DA94E32E9DD61F000F3DF5 /* Python.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Python.framework; sourceTree = "<group>"; };
-		97DA94E92E9DD7BC000F3DF5 /* site-packages */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "site-packages"; path = "YoutubeService/venv/lib/python3.14/site-packages"; sourceTree = "<group>"; };
 		97DA94EB2E9DDDF8000F3DF5 /* cert.pem */ = {isa = PBXFileReference; lastKnownFileType = text; path = cert.pem; sourceTree = "<group>"; };
 		97FE894B2E9AED9400AFD4AC /* Veila.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Veila.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		97FE895A2E9AED9500AFD4AC /* VeilaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VeilaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -63,11 +64,13 @@
 				venv/bin/uvicorn,
 				"venv/bin/yt-dlp",
 				"venv/bin/𝜋thon",
+				"venv/lib/python3.14/site-packages/__pycache__/sqlitedict.cpython-314.pyc",
 				"venv/lib/python3.14/site-packages/__pycache__/typing_extensions.cpython-314.pyc",
 				"venv/lib/python3.14/site-packages/annotated_types-0.7.0.dist-info/INSTALLER",
 				"venv/lib/python3.14/site-packages/annotated_types-0.7.0.dist-info/licenses/LICENSE",
 				"venv/lib/python3.14/site-packages/annotated_types-0.7.0.dist-info/METADATA",
 				"venv/lib/python3.14/site-packages/annotated_types-0.7.0.dist-info/RECORD",
+				"venv/lib/python3.14/site-packages/annotated_types-0.7.0.dist-info/REQUESTED",
 				"venv/lib/python3.14/site-packages/annotated_types-0.7.0.dist-info/WHEEL",
 				"venv/lib/python3.14/site-packages/annotated_types/__init__.py",
 				"venv/lib/python3.14/site-packages/annotated_types/__pycache__/__init__.cpython-314.pyc",
@@ -79,6 +82,7 @@
 				"venv/lib/python3.14/site-packages/anyio-4.11.0.dist-info/licenses/LICENSE",
 				"venv/lib/python3.14/site-packages/anyio-4.11.0.dist-info/METADATA",
 				"venv/lib/python3.14/site-packages/anyio-4.11.0.dist-info/RECORD",
+				"venv/lib/python3.14/site-packages/anyio-4.11.0.dist-info/REQUESTED",
 				"venv/lib/python3.14/site-packages/anyio-4.11.0.dist-info/top_level.txt",
 				"venv/lib/python3.14/site-packages/anyio-4.11.0.dist-info/WHEEL",
 				"venv/lib/python3.14/site-packages/anyio/__init__.py",
@@ -164,10 +168,21 @@
 				"venv/lib/python3.14/site-packages/anyio/to_interpreter.py",
 				"venv/lib/python3.14/site-packages/anyio/to_process.py",
 				"venv/lib/python3.14/site-packages/anyio/to_thread.py",
+				"venv/lib/python3.14/site-packages/async_timeout-5.0.1.dist-info/INSTALLER",
+				"venv/lib/python3.14/site-packages/async_timeout-5.0.1.dist-info/LICENSE",
+				"venv/lib/python3.14/site-packages/async_timeout-5.0.1.dist-info/METADATA",
+				"venv/lib/python3.14/site-packages/async_timeout-5.0.1.dist-info/RECORD",
+				"venv/lib/python3.14/site-packages/async_timeout-5.0.1.dist-info/top_level.txt",
+				"venv/lib/python3.14/site-packages/async_timeout-5.0.1.dist-info/WHEEL",
+				"venv/lib/python3.14/site-packages/async_timeout-5.0.1.dist-info/zip-safe",
+				"venv/lib/python3.14/site-packages/async_timeout/__init__.py",
+				"venv/lib/python3.14/site-packages/async_timeout/__pycache__/__init__.cpython-314.pyc",
+				"venv/lib/python3.14/site-packages/async_timeout/py.typed",
 				"venv/lib/python3.14/site-packages/click-8.3.0.dist-info/INSTALLER",
 				"venv/lib/python3.14/site-packages/click-8.3.0.dist-info/licenses/LICENSE.txt",
 				"venv/lib/python3.14/site-packages/click-8.3.0.dist-info/METADATA",
 				"venv/lib/python3.14/site-packages/click-8.3.0.dist-info/RECORD",
+				"venv/lib/python3.14/site-packages/click-8.3.0.dist-info/REQUESTED",
 				"venv/lib/python3.14/site-packages/click-8.3.0.dist-info/WHEEL",
 				"venv/lib/python3.14/site-packages/click/__init__.py",
 				"venv/lib/python3.14/site-packages/click/__pycache__/__init__.cpython-314.pyc",
@@ -318,6 +333,7 @@
 				"venv/lib/python3.14/site-packages/h11-0.16.0.dist-info/licenses/LICENSE.txt",
 				"venv/lib/python3.14/site-packages/h11-0.16.0.dist-info/METADATA",
 				"venv/lib/python3.14/site-packages/h11-0.16.0.dist-info/RECORD",
+				"venv/lib/python3.14/site-packages/h11-0.16.0.dist-info/REQUESTED",
 				"venv/lib/python3.14/site-packages/h11-0.16.0.dist-info/top_level.txt",
 				"venv/lib/python3.14/site-packages/h11-0.16.0.dist-info/WHEEL",
 				"venv/lib/python3.14/site-packages/h11/__init__.py",
@@ -347,6 +363,7 @@
 				"venv/lib/python3.14/site-packages/idna-3.11.dist-info/licenses/LICENSE.md",
 				"venv/lib/python3.14/site-packages/idna-3.11.dist-info/METADATA",
 				"venv/lib/python3.14/site-packages/idna-3.11.dist-info/RECORD",
+				"venv/lib/python3.14/site-packages/idna-3.11.dist-info/REQUESTED",
 				"venv/lib/python3.14/site-packages/idna-3.11.dist-info/WHEEL",
 				"venv/lib/python3.14/site-packages/idna/__init__.py",
 				"venv/lib/python3.14/site-packages/idna/__pycache__/__init__.cpython-314.pyc",
@@ -1226,6 +1243,7 @@
 				"venv/lib/python3.14/site-packages/pydantic_core-2.41.3.dist-info/licenses/LICENSE",
 				"venv/lib/python3.14/site-packages/pydantic_core-2.41.3.dist-info/METADATA",
 				"venv/lib/python3.14/site-packages/pydantic_core-2.41.3.dist-info/RECORD",
+				"venv/lib/python3.14/site-packages/pydantic_core-2.41.3.dist-info/REQUESTED",
 				"venv/lib/python3.14/site-packages/pydantic_core-2.41.3.dist-info/WHEEL",
 				"venv/lib/python3.14/site-packages/pydantic_core/__init__.py",
 				"venv/lib/python3.14/site-packages/pydantic_core/__pycache__/__init__.cpython-314.pyc",
@@ -1458,6 +1476,7 @@
 				"venv/lib/python3.14/site-packages/sniffio-1.3.1.dist-info/LICENSE.MIT",
 				"venv/lib/python3.14/site-packages/sniffio-1.3.1.dist-info/METADATA",
 				"venv/lib/python3.14/site-packages/sniffio-1.3.1.dist-info/RECORD",
+				"venv/lib/python3.14/site-packages/sniffio-1.3.1.dist-info/REQUESTED",
 				"venv/lib/python3.14/site-packages/sniffio-1.3.1.dist-info/top_level.txt",
 				"venv/lib/python3.14/site-packages/sniffio-1.3.1.dist-info/WHEEL",
 				"venv/lib/python3.14/site-packages/sniffio/__init__.py",
@@ -1471,10 +1490,19 @@
 				"venv/lib/python3.14/site-packages/sniffio/_tests/test_sniffio.py",
 				"venv/lib/python3.14/site-packages/sniffio/_version.py",
 				"venv/lib/python3.14/site-packages/sniffio/py.typed",
+				"venv/lib/python3.14/site-packages/sqlitedict-2.1.0.dist-info/INSTALLER",
+				"venv/lib/python3.14/site-packages/sqlitedict-2.1.0.dist-info/licenses/LICENSE.md",
+				"venv/lib/python3.14/site-packages/sqlitedict-2.1.0.dist-info/METADATA",
+				"venv/lib/python3.14/site-packages/sqlitedict-2.1.0.dist-info/RECORD",
+				"venv/lib/python3.14/site-packages/sqlitedict-2.1.0.dist-info/REQUESTED",
+				"venv/lib/python3.14/site-packages/sqlitedict-2.1.0.dist-info/top_level.txt",
+				"venv/lib/python3.14/site-packages/sqlitedict-2.1.0.dist-info/WHEEL",
+				"venv/lib/python3.14/site-packages/sqlitedict.py",
 				"venv/lib/python3.14/site-packages/starlette-0.48.0.dist-info/INSTALLER",
 				"venv/lib/python3.14/site-packages/starlette-0.48.0.dist-info/licenses/LICENSE.md",
 				"venv/lib/python3.14/site-packages/starlette-0.48.0.dist-info/METADATA",
 				"venv/lib/python3.14/site-packages/starlette-0.48.0.dist-info/RECORD",
+				"venv/lib/python3.14/site-packages/starlette-0.48.0.dist-info/REQUESTED",
 				"venv/lib/python3.14/site-packages/starlette-0.48.0.dist-info/WHEEL",
 				"venv/lib/python3.14/site-packages/starlette/__init__.py",
 				"venv/lib/python3.14/site-packages/starlette/__pycache__/__init__.cpython-314.pyc",
@@ -1549,12 +1577,14 @@
 				"venv/lib/python3.14/site-packages/typing_extensions-4.15.0.dist-info/licenses/LICENSE",
 				"venv/lib/python3.14/site-packages/typing_extensions-4.15.0.dist-info/METADATA",
 				"venv/lib/python3.14/site-packages/typing_extensions-4.15.0.dist-info/RECORD",
+				"venv/lib/python3.14/site-packages/typing_extensions-4.15.0.dist-info/REQUESTED",
 				"venv/lib/python3.14/site-packages/typing_extensions-4.15.0.dist-info/WHEEL",
 				"venv/lib/python3.14/site-packages/typing_extensions.py",
 				"venv/lib/python3.14/site-packages/typing_inspection-0.4.2.dist-info/INSTALLER",
 				"venv/lib/python3.14/site-packages/typing_inspection-0.4.2.dist-info/licenses/LICENSE",
 				"venv/lib/python3.14/site-packages/typing_inspection-0.4.2.dist-info/METADATA",
 				"venv/lib/python3.14/site-packages/typing_inspection-0.4.2.dist-info/RECORD",
+				"venv/lib/python3.14/site-packages/typing_inspection-0.4.2.dist-info/REQUESTED",
 				"venv/lib/python3.14/site-packages/typing_inspection-0.4.2.dist-info/WHEEL",
 				"venv/lib/python3.14/site-packages/typing_inspection/__init__.py",
 				"venv/lib/python3.14/site-packages/typing_inspection/__pycache__/__init__.cpython-314.pyc",
@@ -3760,17 +3790,7 @@
 				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/_tab.py",
 				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/_video.py",
 				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/pot/__init__.py",
-				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/pot/__pycache__/__init__.cpython-314.pyc",
-				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/pot/__pycache__/_director.cpython-314.pyc",
-				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/pot/__pycache__/_provider.cpython-314.pyc",
-				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/pot/__pycache__/_registry.cpython-314.pyc",
-				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/pot/__pycache__/cache.cpython-314.pyc",
-				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/pot/__pycache__/provider.cpython-314.pyc",
-				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/pot/__pycache__/utils.cpython-314.pyc",
 				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/pot/_builtin/__init__.py",
-				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/pot/_builtin/__pycache__/__init__.cpython-314.pyc",
-				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/pot/_builtin/__pycache__/memory_cache.cpython-314.pyc",
-				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/pot/_builtin/__pycache__/webpo_cachespec.cpython-314.pyc",
 				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/pot/_builtin/memory_cache.py",
 				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/pot/_builtin/webpo_cachespec.py",
 				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/pot/_director.py",
@@ -3918,6 +3938,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9766F5142EA0B97C0059519C /* Kingfisher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3941,10 +3962,10 @@
 		97FE89422E9AED9400AFD4AC = {
 			isa = PBXGroup;
 			children = (
+				9766ED962EA0A6AB0059519C /* main.py */,
+				9766ED942EA0A6960059519C /* site-packages */,
 				97DA94EB2E9DDDF8000F3DF5 /* cert.pem */,
-				97DA94E92E9DD7BC000F3DF5 /* site-packages */,
 				97DA94E32E9DD61F000F3DF5 /* Python.framework */,
-				97DA94D42E9DCECA000F3DF5 /* main.py */,
 				97CEEBCB2E9D7DC6001EB370 /* ContentService */,
 				97FE894D2E9AED9400AFD4AC /* Veila */,
 				97FE895D2E9AED9500AFD4AC /* VeilaTests */,
@@ -3986,6 +4007,7 @@
 			);
 			name = Veila;
 			packageProductDependencies = (
+				9766F5132EA0B97C0059519C /* Kingfisher */,
 			);
 			productName = Stories;
 			productReference = 97FE894B2E9AED9400AFD4AC /* Veila.app */;
@@ -4071,6 +4093,7 @@
 			mainGroup = 97FE89422E9AED9400AFD4AC;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+				9766F5122EA0B97C0059519C /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 97FE894C2E9AED9400AFD4AC /* Products */;
@@ -4089,10 +4112,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9766ED972EA0A6AB0059519C /* main.py in Resources */,
+				9766ED952EA0A6960059519C /* site-packages in Resources */,
 				97DA94EC2E9DDDF8000F3DF5 /* cert.pem in Resources */,
-				97DA94EA2E9DD7BD000F3DF5 /* site-packages in Resources */,
 				97DA94E42E9DD61F000F3DF5 /* Python.framework in Resources */,
-				97DA94D52E9DCECA000F3DF5 /* main.py in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4305,6 +4328,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/YoutubeService/venv/lib/python3.14/site-packages/pydantic_core",
 					"$(PROJECT_DIR)/YoutubeService/venv/lib/python3.13/site-packages/pydantic_core",
+					"$(PROJECT_DIR)/ContentService/venv/lib/python3.14/site-packages/pydantic_core",
 				);
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = "";
@@ -4360,6 +4384,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/YoutubeService/venv/lib/python3.14/site-packages/pydantic_core",
 					"$(PROJECT_DIR)/YoutubeService/venv/lib/python3.13/site-packages/pydantic_core",
+					"$(PROJECT_DIR)/ContentService/venv/lib/python3.14/site-packages/pydantic_core",
 				);
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = "";
@@ -4493,6 +4518,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		9766F5122EA0B97C0059519C /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.6.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9766F5132EA0B97C0059519C /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9766F5122EA0B97C0059519C /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 97FE89432E9AED9400AFD4AC /* Project object */;
 }

@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import Kingfisher
 
 struct ChannelView: View {
 	@Binding var currentChannelID: String
@@ -19,14 +20,14 @@ struct ChannelView: View {
 		} else if number < 1_000_000 {
 			let divided = Double(number) / 1_000
 			let formatted = divided.truncatingRemainder(dividingBy: 1) == 0 ?
-				String(format: "%.0f", divided) :
-				String(format: "%.1f", divided)
+			String(format: "%.0f", divided) :
+			String(format: "%.1f", divided)
 			return "\(formatted)k"
 		} else {
 			let divided = Double(number) / 1_000_000
 			let formatted = divided.truncatingRemainder(dividingBy: 1) == 0 ?
-				String(format: "%.0f", divided) :
-				String(format: "%.1f", divided)
+			String(format: "%.0f", divided) :
+			String(format: "%.1f", divided)
 			return "\(formatted)M"
 		}
 	}
@@ -66,40 +67,34 @@ struct ChannelView: View {
 			} else if let channel = channel {
 				ScrollView {
 					VStack(spacing: 16) {
-						AsyncImage(url: channel.bannerURL) { image in
-							image
-								.resizable()
-								.scaledToFill()
-								.frame(height: 200)
-								.clipped()
-						} placeholder: {
-							Color.gray.frame(height: 200)
-						}
+						KFImage(channel.bannerURL)
+							.resizable()
+							.scaledToFill()
+							.frame(height: 200)
+							.clipped()
+							.background(Color.gray.frame(height: 200))
 
 						HStack(alignment: .center, spacing: 16) {
-							AsyncImage(url: channel.avatarURL) { image in
-								image
-									.resizable()
-									.frame(width: 80, height: 80)
-									.clipShape(Circle())
-							} placeholder: {
-								Circle().fill(Color.gray).frame(width: 80, height: 80)
-							}
+							KFImage(channel.avatarURL)
+								.resizable()
+								.frame(width: 80, height: 80)
+								.clipShape(Circle())
+								.background(Circle().fill(Color.gray).frame(width: 80, height: 80))
 
 							HStack {
-							VStack(alignment: .leading) {
-								Text(channel.title)
-									.font(.title2)
-									.bold()
+								VStack(alignment: .leading) {
+									Text(channel.title)
+										.font(.title2)
+										.bold()
 
-								Text("\(self.formatSubCount(channel.subscribers)) subscribers")
-									.font(.subheadline)
-									.foregroundColor(.secondary)
+									Text("\(self.formatSubCount(channel.subscribers)) subscribers")
+										.font(.subheadline)
+										.foregroundColor(.secondary)
 
-								Text(channel.desc)
-									.font(.body)
-									.foregroundColor(.secondary)
-									.lineLimit(3)
+									Text(channel.desc)
+										.font(.body)
+										.foregroundColor(.secondary)
+										.lineLimit(3)
 								}
 
 								subscriptionButton
@@ -156,16 +151,12 @@ struct VideoRow: View {
 				selection = .watchVideo
 				currentVideoID = video.id
 			}) {
-				AsyncImage(url: video.thumbnail) { image in
-					image
-						.resizable()
-						.scaledToFill()
-						.frame(width: 120, height: 68)
-						.clipped()
-						.cornerRadius(6)
-				} placeholder: {
-					Color.gray.frame(width: 120, height: 68)
-				}
+				KFImage(video.thumbnail)
+					.resizable()
+					.scaledToFill()
+					.frame(width: 120, height: 68)
+					.clipped()
+					.background(Color.gray.frame(width: 120, height: 68))
 			}
 			.buttonStyle(PlainButtonStyle())
 
