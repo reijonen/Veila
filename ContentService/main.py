@@ -3,8 +3,32 @@ from pydantic import BaseModel
 import yt_dlp
 import uvicorn
 from typing import Optional
+import time
+from sqlitedict import SqliteDict
+import json
+
+class SQLiteCache:
+	def __init__(self):
+		self.db = SqliteDict("cache.db", autocommit=True)
+		self.ttl = 86400
+
+	def get(self, key):
+		data = self.db.get(key)
+		if not data:
+			return None
+		value, expires = json.loads(data)
+		if expires < time.time():
+			del self.db[key]
+			return None
+		return value
+
+	def set(self, key, value, ttl=None):
+		ttl = ttl or self.ttl
+		expires = time.time() + ttl
+		self.db[key] = json.dumps([value, expires])
 
 app = FastAPI()
+cache = SQLiteCache()
 
 class Video(BaseModel):
 	id: str
@@ -55,6 +79,11 @@ def get_highest_res_banner(thumbnails):
 
 @app.get("/channel/{id}")
 def get_channel(id: str):
+	cache_key = f"channel:{id}"
+	cached = cache.get(cache_key)
+	if cached:
+		return cached
+
 	ydl_opts = {
 		"skip_download": True,
 		"extract_flat": True,
@@ -94,7 +123,7 @@ def get_channel(id: str):
 				"stream_url": None
 			})
 
-		return {
+		result = {
 			"id": info["channel_id"],
 			"title": info["channel"],
 			"desc": info["description"],
@@ -104,8 +133,17 @@ def get_channel(id: str):
 			"banner_url": banner_url,
 		}
 
+		cache.set(cache_key, result, None)
+
+		return result
+
 @app.get("/video/{id}")
 def get_video(id: str):
+	cache_key = f"video:{id}"
+	cached = cache.get(cache_key)
+	if cached:
+		return cached
+
 	ydl_opts = {
 		"skip_download": True,
 		"format": "best",
@@ -118,30 +156,39 @@ def get_video(id: str):
 
 		print("FORMATS:", info.get("formats"))
 
-	progressive_formats = [
-		f for f in info.get("formats")
-		if f.get("acodec") != "none"
-		and f.get("vcodec") != "none"
-		and f.get("ext") == "mp4"   # only MP4 files
-		and not f.get("protocol", "").startswith("m3u8")  # skip HLS
-	]
-	
-	best_format = max(
-		progressive_formats,
-		key=lambda f: f.get("height", 0),
-		default=None
-	)
+		progressive_formats = [
+			f for f in info.get("formats")
+			if f.get("acodec") != "none"
+			and f.get("vcodec") != "none"
+			and f.get("ext") == "mp4"   # only MP4 files
+			and not f.get("protocol", "").startswith("m3u8")  # skip HLS
+		]
 
-	headers = best_format.get("http_headers", {})
+		best_format = max(
+			progressive_formats,
+			key=lambda f: f.get("height", 0),
+			default=None
+		)
 
-	return {
-		"stream_url": best_format["url"],
-		"headers": headers
-	}
+		headers = best_format.get("http_headers", {})
+
+		result = {
+			"stream_url": best_format["url"],
+			"headers": headers
+		}
+
+		cache.set(cache_key, result, None)
+
+		return result
 
 # TODO: channel_id vois käyttää sub-napin lisäämiseen
 @app.post("/search")
 def search(q: str):
+	cache_key = f"search:{q}"
+	cached = cache.get(cache_key)
+	if cached:
+		return cached
+
 	ydl_opts = {
 		"extract_flat": True
 	}
@@ -187,6 +234,8 @@ def search(q: str):
 				"stream_url": None
 			})
 
+		cache.set(cache_key, results, None)
+
 		return results
 
 if __name__ == "__main__":
@@ -196,5 +245,5 @@ if __name__ == "__main__":
 		port=8777,
 		#reload=True,
 		log_level="info",
-		workers=1
+#		workers=1
 	)
