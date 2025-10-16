@@ -1,0 +1,14 @@
+Python.framework/
+TODO/
+cert.pem
+*.xcuserstate
+*.xccheckout
+*.xcscmblueprint
+xcuserdata/
+DerivedData/
+xcuserdata/
+YoutubeService/*.json
+Stories.xcodeproj/xcuserdata/sor.xcuserdatad/xcschemes/xcschememanagement.plist
+
+*.swp
+.DS_Store
