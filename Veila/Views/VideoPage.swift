@@ -117,7 +117,7 @@ struct WatchVideoView: View {
 
 	func play() async {
 		do {
-			let video = try await YoutubeService.shared.getVideo(id: self.videoID)
+			let video = try await ContentService.shared.getVideo(id: self.videoID)
 			print("stream url:", video.streamURL)
 			
 
@@ -133,7 +133,7 @@ struct WatchVideoView: View {
 			// Optional priming
 
 			do {
-				let segments = try await YoutubeService.shared.getSkipSegments(id: self.videoID)
+				let segments = try await ContentService.shared.getSkipSegments(id: self.videoID)
 				if segments != nil {
 					self.skipSegments = segments!
 				}

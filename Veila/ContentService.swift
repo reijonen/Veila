@@ -1,8 +1,8 @@
 import Foundation
 import SwiftUI
 
-final class YoutubeService {
-	static let shared = YoutubeService()
+final class ContentService {
+	static let shared = ContentService()
 	private let baseURL = URL(string: "http://127.0.0.1:8777")!
 	private var pythonProcess: Process?
 

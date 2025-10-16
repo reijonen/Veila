@@ -7,7 +7,7 @@ cert.pem
 xcuserdata/
 DerivedData/
 xcuserdata/
-YoutubeService/*.json
+ContentService/*.json
 Stories.xcodeproj/xcuserdata/sor.xcuserdatad/xcschemes/xcschememanagement.plist
 
 *.swp

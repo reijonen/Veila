@@ -4,7 +4,7 @@ import SwiftData
 @main
 struct VeilaApp: App {
 	var sharedModelContainer: ModelContainer = {
-		YoutubeService.shared.startPythonServer()
+		ContentService.shared.startPythonServer()
 
         let schema = Schema([
 //            Channel.self,

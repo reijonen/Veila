@@ -41,7 +41,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		9740E74B2E9DAA250073B558 /* Exceptions for "YoutubeService" folder in "Veila" target */ = {
+		9740E74B2E9DAA250073B558 /* Exceptions for "ContentService" folder in "Veila" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				main.py,
@@ -3888,12 +3888,12 @@
 			path = TODO;
 			sourceTree = "<group>";
 		};
-		97CEEBCB2E9D7DC6001EB370 /* YoutubeService */ = {
+		97CEEBCB2E9D7DC6001EB370 /* ContentService */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				9740E74B2E9DAA250073B558 /* Exceptions for "YoutubeService" folder in "Veila" target */,
+				9740E74B2E9DAA250073B558 /* Exceptions for "ContentService" folder in "Veila" target */,
 			);
-			path = YoutubeService;
+			path = ContentService;
 			sourceTree = "<group>";
 		};
 		97FE894D2E9AED9400AFD4AC /* Veila */ = {
@@ -3945,7 +3945,7 @@
 				97DA94E92E9DD7BC000F3DF5 /* site-packages */,
 				97DA94E32E9DD61F000F3DF5 /* Python.framework */,
 				97DA94D42E9DCECA000F3DF5 /* main.py */,
-				97CEEBCB2E9D7DC6001EB370 /* YoutubeService */,
+				97CEEBCB2E9D7DC6001EB370 /* ContentService */,
 				97FE894D2E9AED9400AFD4AC /* Veila */,
 				97FE895D2E9AED9500AFD4AC /* VeilaTests */,
 				97FE89672E9AED9500AFD4AC /* VeilaUITests */,
@@ -3981,7 +3981,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				9740E7462E9DA9B20073B558 /* TODO */,
-				97CEEBCB2E9D7DC6001EB370 /* YoutubeService */,
+				97CEEBCB2E9D7DC6001EB370 /* ContentService */,
 				97FE894D2E9AED9400AFD4AC /* Veila */,
 			);
 			name = Veila;

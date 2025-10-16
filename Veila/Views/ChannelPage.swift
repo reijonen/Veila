@@ -101,7 +101,7 @@ struct ChannelView: View {
 
 	private func fetchChannel() async {
 		do {
-			channel = try await YoutubeService.shared.getChannel(id: currentChannelID)
+			channel = try await ContentService.shared.getChannel(id: currentChannelID)
 			print("Channel:", channel!)
 		} catch {
 			print("ERROR:", error)

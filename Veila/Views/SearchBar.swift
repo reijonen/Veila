@@ -42,7 +42,7 @@ struct SearchBarView: View {
 		}
 
 		do {
-			let results = try await YoutubeService.shared.search(query: self.searchText)
+			let results = try await ContentService.shared.search(query: self.searchText)
 
 //			print("Search results:", results)
 
