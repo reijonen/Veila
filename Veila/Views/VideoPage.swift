@@ -106,7 +106,8 @@ struct WatchVideoView: View {
 				let end = skip.segment[1]
 
 				if currentTime >= start && currentTime < end {
-					self.player.seek(to: CMTime(seconds: end + 1, preferredTimescale: 600)) { _ in
+//					TODO: jump only once, set segment done, remove + 2
+					self.player.seek(to: CMTime(seconds: end + 2, preferredTimescale: 600)) { _ in
 						print("⏩ Skipped segment: \(start) → \(end)")
 					}
 					break

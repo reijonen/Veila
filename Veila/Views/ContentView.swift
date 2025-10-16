@@ -11,11 +11,9 @@ struct ContentView: View {
 
 	@State private var currentVideoID: String = ""
 
-	@State private var subscriptions: Array<Subscription> = []
-
 	var body: some View {
 		NavigationSplitView {
-			SidebarView(selection: $selection, currentChannelID: $currentChannelID, subscriptions: $subscriptions)
+			SidebarView(selection: $selection, currentChannelID: $currentChannelID)
 		} detail: {
 			content
 				.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
@@ -34,8 +32,9 @@ struct ContentView: View {
 				SubscriptionsView()
 			case .channel:
 				ChannelView(currentChannelID: $currentChannelID, currentVideoID: $currentVideoID, selection: $selection)
+					.id(currentChannelID)
 			case .search:
-				SearchView(isSearching: $isSearching, searchResults: $searchResults, selection: $selection, currentVideoID: $currentVideoID, currentChannelID: $currentChannelID, subscriptions: $subscriptions)
+				SearchView(isSearching: $isSearching, searchResults: $searchResults, selection: $selection, currentVideoID: $currentVideoID, currentChannelID: $currentChannelID)
 //			case .playlists:
 //				Text("playlists")
 //				PlaylistsView()
@@ -44,6 +43,7 @@ struct ContentView: View {
 //				HistoryView()
 			case .watchVideo:
 				WatchVideoView(videoID: $currentVideoID)
+//					.id(currentVideoID)
 		}
 	}
 }

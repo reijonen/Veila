@@ -10,6 +10,9 @@ struct ChannelView: View {
 	@State private var isLoading: Bool = true
 	@State private var errorMessage: String? = nil
 
+	@Environment(\.modelContext) private var modelContext
+	@Query(sort: \Subscription.title) var subscriptions: [Subscription]
+
 	private func formatSubCount(_ number: UInt) -> String {
 		if number < 1_000 {
 			return "\(number)"
@@ -28,6 +31,32 @@ struct ChannelView: View {
 		}
 	}
 
+	func toggleSubscription() {
+		if let sub = subscriptions.first(where: { $0.id == currentChannelID }) {
+			modelContext.delete(sub)
+		} else if let channel = channel {
+			let newSub = Subscription(
+				id: currentChannelID,
+				title: channel.title,
+				url: URL(string: "https://www.youtube.com/feeds/videos.xml?channel_id=\(currentChannelID)")!
+			)
+			modelContext.insert(newSub)
+		}
+		try? modelContext.save()
+	}
+
+	private var subscriptionButton: some View {
+		let isSubscribed = subscriptions.contains(where: { $0.id == currentChannelID })
+		return Button(action: toggleSubscription) {
+			Text(isSubscribed ? "Unsubscribe" : "Subscribe")
+				.font(.subheadline)
+				.padding(6)
+				.background(isSubscribed ? Color.gray : Color.blue)
+				.foregroundColor(.white)
+				.cornerRadius(4)
+		}
+		.buttonStyle(PlainButtonStyle())
+	}
 
 	var body: some View {
 		Group {
@@ -57,6 +86,7 @@ struct ChannelView: View {
 								Circle().fill(Color.gray).frame(width: 80, height: 80)
 							}
 
+							HStack {
 							VStack(alignment: .leading) {
 								Text(channel.title)
 									.font(.title2)
@@ -65,10 +95,14 @@ struct ChannelView: View {
 								Text("\(self.formatSubCount(channel.subscribers)) subscribers")
 									.font(.subheadline)
 									.foregroundColor(.secondary)
+
 								Text(channel.desc)
 									.font(.body)
 									.foregroundColor(.secondary)
 									.lineLimit(3)
+								}
+
+								subscriptionButton
 							}
 						}
 						.padding(.horizontal)
@@ -108,7 +142,8 @@ struct ChannelView: View {
 			errorMessage = error.localizedDescription
 		}
 		isLoading = false
-	}}
+	}
+}
 
 struct VideoRow: View {
 	let video: Video

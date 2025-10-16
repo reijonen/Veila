@@ -1,11 +1,14 @@
 import SwiftUI
+import SwiftData
 
 struct VideoRowView: View {
 	let video: Video
 
 	@Binding var selection: SidebarSelection
 	@Binding var currentChannelID: String
-	@Binding var subscriptions: Array<Subscription>
+
+	@Environment(\.modelContext) private var modelContext
+	@Query(sort: \Subscription.title) var subscriptions: [Subscription]
 
 	var body: some View {
 		HStack(alignment: .top, spacing: 12) {
@@ -47,15 +50,14 @@ struct VideoRowView: View {
 				.buttonStyle(PlainButtonStyle())
 
 				Button(action: {
-					let newSubscription = Subscription(
-						id: video.channelID,
-						title: video.uploader,
-						url: URL(string: "https://www.example.com/channel/\(video.channelID)")! // Replace with actual channel URL
-					)
-
-					// Add only if it's not already in the subscriptions
-					if !subscriptions.contains(newSubscription) {
-						subscriptions.append(newSubscription)
+					if !subscriptions.contains(where: { $0.id == video.channelID }) {
+						let newSub = Subscription(
+							id: video.channelID,
+							title: video.uploader,
+							url: URL(string: "https://www.youtube.com/feeds/videos.xml?channel_id=\(video.channelID)")!
+						)
+						modelContext.insert(newSub)
+						try? modelContext.save()
 					}
 				}) {
 					Text("Subscribe")
@@ -107,8 +109,7 @@ struct SearchView: View {
 	@Binding var selection: SidebarSelection
 	@Binding var currentVideoID: String
 	@Binding var currentChannelID: String
-	@Binding var subscriptions: Array<Subscription>
-
+	
 	var body: some View {
 		Group {
 			if isSearching {
@@ -136,7 +137,7 @@ struct SearchView: View {
 						selection = .watchVideo
 						currentVideoID = video.id
 					}) {
-						VideoRowView(video: video, selection: $selection, currentChannelID: $currentChannelID, subscriptions: $subscriptions)
+						VideoRowView(video: video, selection: $selection, currentChannelID: $currentChannelID)
 					}
 					.buttonStyle(PlainButtonStyle())
 				}

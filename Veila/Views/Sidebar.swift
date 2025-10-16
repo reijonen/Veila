@@ -13,26 +13,33 @@ enum SidebarSelection: Hashable {
 struct SubscriptionsList: View {
 	@Binding var selection: SidebarSelection
 	@Binding var currentChannelID: String
-	@Binding var subscriptions: Array<Subscription>
+
+	@Environment(\.modelContext) private var modelContext
+	@Query(sort: \Subscription.title) var subscriptions: [Subscription]
 
 	var body: some View {
-		ForEach(subscriptions) { channel in
-			Button(action: {
-				selection = .channel
-				currentChannelID = channel.id
-			}) {
-				Text(channel.title)
-			}
-			.buttonStyle(PlainButtonStyle())
+		if subscriptions.isEmpty {
+			Text("No subscriptions")
+				.foregroundStyle(.secondary)
+		} else {
+			ForEach(subscriptions) { channel in
+				Button(action: {
+					selection = .channel
+					currentChannelID = channel.id
+				}) {
+					Text(channel.title)
+				}
+				.buttonStyle(PlainButtonStyle())
 
-//			TODO: sub deletion
-//			.contextMenu {
-//				Button(role: .destructive) {
-//					deleteChannel(channel)
-//				} label: {
-//					Label("Delete", systemImage: "trash")
-//				}
-//			}
+	//			TODO: sub deletion
+	//			.contextMenu {
+	//				Button(role: .destructive) {
+	//					deleteChannel(channel)
+	//				} label: {
+	//					Label("Delete", systemImage: "trash")
+	//				}
+	//			}
+			}
 		}
 	}
 
@@ -44,26 +51,18 @@ struct SubscriptionsList: View {
 }
 
 struct SidebarView: View {
-//    @Environment(\.modelContext) private var modelContext
-
-	@State private var subscriptionsExpanded: Bool = false
+	@State private var subscriptionsExpanded: Bool = true
 	@Binding var selection: SidebarSelection
 	@Binding var currentChannelID: String
-	@Binding var subscriptions: Array<Subscription>
 
     var body: some View {
         List(selection: $selection) {
             DisclosureGroup(isExpanded: $subscriptionsExpanded) {
-				if subscriptions.isEmpty {
-                    Text("No subscriptions")
-                        .foregroundStyle(.secondary)
-                } else {
-					SubscriptionsList(selection: $selection, currentChannelID: $currentChannelID, subscriptions: $subscriptions)
-                }
+				SubscriptionsList(selection: $selection, currentChannelID: $currentChannelID)
             } label: {
-//                NavigationLink(value: SidebarSelection.subscriptions) {
+                NavigationLink(value: SidebarSelection.subscriptions) {
                     Label("Subscriptions", systemImage: "tray.full")
-//                }
+                }
             }
 
 //			TODO: what does NavigationLink do? history stack?
