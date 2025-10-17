@@ -12,16 +12,24 @@ enum SidebarSelection: Hashable {
 }
 
 struct SidebarView: View {
-	@State private var subscriptionsExpanded: Bool = false
-	@State private var playlistsExpanded: Bool = false
-
 	@Binding var selection: SidebarSelection
 	@Binding var currentChannelID: String
 	@Binding var currentPlaylistID: UUID?
 
+	@Environment(\.modelContext) private var context
+	@Query private var settings: [Settings]
+
     var body: some View {
+		let appSettings = settings.first!
+
         List(selection: $selection) {
-            DisclosureGroup(isExpanded: $subscriptionsExpanded) {
+            DisclosureGroup(isExpanded: Binding(
+				get: { appSettings.subscriptionsExpanded },
+				set: { newValue in
+					appSettings.subscriptionsExpanded = newValue
+					try? context.save()
+				})
+			) {
 				SubscriptionsList(selection: $selection, currentChannelID: $currentChannelID)
             } label: {
 	//			TODO: what does NavigationLink do? history stack?
@@ -30,7 +38,13 @@ struct SidebarView: View {
                 }
             }
 
-			DisclosureGroup(isExpanded: $playlistsExpanded) {
+			DisclosureGroup(isExpanded: Binding(
+				get: { appSettings.playlistsExpanded },
+				set: { newValue in
+					appSettings.playlistsExpanded = newValue
+					try? context.save()
+				})
+			) {
 				PlaylistList(selection: $selection, currentPlaylistID: $currentPlaylistID)
 			} label: {
 				NavigationLink(value: SidebarSelection.playlistOverview) {

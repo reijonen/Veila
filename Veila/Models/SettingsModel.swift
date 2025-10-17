@@ -1,14 +1,12 @@
 import Foundation
 import SwiftData
-import Combine
 
 @Model
 class Settings {
+	var subscriptionsExpanded: Bool = false
+	var playlistsExpanded: Bool = false
 	var skipSponsorSegments: Bool = true
-	var defaultPlaylistID: UUID?
+	var defaultPlaylistID: UUID? = nil
 
-	init() {
-		self.skipSponsorSegments = true
-		self.defaultPlaylistID = nil
-	}
+	init() {}
 }
