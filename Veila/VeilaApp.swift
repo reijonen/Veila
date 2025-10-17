@@ -7,7 +7,8 @@ struct VeilaApp: App {
 		ContentService.shared.startPythonServer()
 
         let schema = Schema([
-			Subscription.self
+			Subscription.self,
+			Playlist.self
         ])
         
         let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)

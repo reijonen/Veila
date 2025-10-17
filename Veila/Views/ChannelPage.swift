@@ -151,85 +151,96 @@ struct ChannelView: View {
 	}
 }
 
-struct VideoRow: View {
+struct AddToPlaylistButton: View {
 	let video: Video
-	@Binding var currentVideoID: String
-	@Binding var selection: SidebarSelection
+	@Environment(\.modelContext) private var modelContext
+	@Query(sort: \Playlist.title) private var playlists: [Playlist]
+
+	@State private var showPlaylistMenu: Bool = false
+	@State private var showCreateNew: Bool = false
+	@State private var newPlaylistName: String = ""
 
 	var body: some View {
-		HStack(spacing: 12) {
-			Button(action: {
-				selection = .watchVideo
-				currentVideoID = video.id
-			}) {
-				KFImage(video.thumbnail)
-					.resizable()
-					.scaledToFill()
-					.frame(width: 120, height: 68)
-					.clipped()
-					.background(Color.gray.frame(width: 120, height: 68))
+		HStack(spacing: 0) {
+			// Main "Add to Playlist" button
+			Button(action: addToDefault) {
+				Label("Add to Playlist", systemImage: "plus")
+					.padding(.vertical, 6)
+					.padding(.horizontal, 12)
+					.background(Color.blue)
+					.foregroundColor(.white)
+//					.cornerRadius(4, corners: [.topLeft, .bottomLeft])
 			}
-			.buttonStyle(PlainButtonStyle())
 
-			VStack(alignment: .leading, spacing: 4) {
-				Button(action: {
-					selection = .watchVideo
-					currentVideoID = video.id
-				}) {
-					Text(video.title)
-						.font(.subheadline)
-						.bold()
-						.lineLimit(2)
-				}
-				.buttonStyle(PlainButtonStyle())
-
-				HStack {
-//					Text(video.uploader)
-//						.font(.caption)
-//						.foregroundColor(.secondary)
-					if video.isLive {
-						Text("LIVE")
-							.font(.caption2)
-							.bold()
-							.foregroundColor(.red)
-							.padding(4)
-							.background(Color.red.opacity(0.2))
-							.cornerRadius(4)
+			// Menu button (dots)
+			Menu {
+				ForEach(playlists) { playlist in
+					Button(playlist.title) {
+						addToPlaylist(playlist)
 					}
 				}
-				Text("\(formatViews(video.views)) views" + (video.duration != nil ? " • \(formatDuration(video.duration!))" : ""))
-					.font(.caption2)
-					.foregroundColor(.secondary)
+				Divider()
+				Button("Create New Playlist") {
+					showCreateNew = true
+				}
+			} label: {
+				Image(systemName: "ellipsis")
+					.padding(.vertical, 6)
+					.padding(.horizontal, 8)
+					.background(Color.blue)
+					.foregroundColor(.white)
 			}
+//			.cornerRadius(4, corners: [.topRight, .bottomRight])
+		}
+		.sheet(isPresented: $showCreateNew) {
+			VStack {
+				Text("Create New Playlist")
+					.font(.headline)
+				TextField("Playlist Name", text: $newPlaylistName)
+					.textFieldStyle(.roundedBorder)
+					.padding()
+				Button("Create") {
+					createPlaylistAndAdd()
+					showCreateNew = false
+					newPlaylistName = ""
+				}
+				.padding()
+				Button("Cancel") {
+					showCreateNew = false
+					newPlaylistName = ""
+				}
+			}
+			.padding()
 		}
 	}
 
-	private func formatViews(_ number: UInt) -> String {
-		if number < 1_000 {
-			return "\(number)"
-		} else if number < 1_000_000 {
-			let divided = Double(number) / 1_000
-			let formatted = divided.truncatingRemainder(dividingBy: 1) == 0 ?
-				String(format: "%.0f", divided) :
-				String(format: "%.1f", divided)
-			return "\(formatted)k"
-		} else {
-			let divided = Double(number) / 1_000_000
-			let formatted = divided.truncatingRemainder(dividingBy: 1) == 0 ?
-				String(format: "%.0f", divided) :
-				String(format: "%.1f", divided)
-			return "\(formatted)M"
+	private func addToDefault() {
+		do {
+			if let defaultPlaylistID = try Settings.shared(context: modelContext).defaultPlaylistID,
+			   let playlist = playlists.first(where: { $0.id == defaultPlaylistID }) {
+				addToPlaylist(playlist)
+			} else {
+				// No default: open menu
+				showPlaylistMenu = true
+			}
+		} catch {
+			print("Failed to fetch settings: \(error)")
+			showPlaylistMenu = true
 		}
 	}
 
-	private func formatDuration(_ seconds: Double) -> String {
-		let hrs = Int(seconds) / 3600
-		let mins = (Int(seconds) % 3600) / 60
-		let secs = Int(seconds) % 60
-		if hrs > 0 {
-			return String(format: "%d:%02d:%02d", hrs, mins, secs)
-		} else {
-			return String(format: "%d:%02d", mins, secs)
+	private func addToPlaylist(_ playlist: Playlist) {
+		if !playlist.videos.contains(video) {
+			playlist.videos.append(video)
+			try? modelContext.save()
 		}
+	}
+
+	private func createPlaylistAndAdd() {
+		let playlist = Playlist(title: newPlaylistName)
+		playlist.videos.append(video)
+		modelContext.insert(playlist)
+		try? modelContext.save()
 	}
 }
+
