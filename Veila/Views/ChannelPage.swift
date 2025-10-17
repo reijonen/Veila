@@ -11,9 +11,6 @@ struct ChannelView: View {
 	@State private var isLoading: Bool = true
 	@State private var errorMessage: String? = nil
 
-	@State private var isFetchingNewData = false
-	@State private var lastChannel: Channel? = nil
-
 	@Environment(\.modelContext) private var modelContext
 	@Query(sort: \Subscription.title) var subscriptions: [Subscription]
 
@@ -64,7 +61,7 @@ struct ChannelView: View {
 
 	var body: some View {
 		Group {
-			if let channel = isFetchingNewData ? lastChannel : channel {
+			if let channel = channel {
 				ScrollView {
 					VStack(spacing: 16) {
 						KFImage(channel.bannerURL)
@@ -104,7 +101,6 @@ struct ChannelView: View {
 
 						Divider()
 
-						// Videos list
 						VStack(alignment: .leading, spacing: 12) {
 							Text("Videos")
 								.font(.headline)
@@ -117,7 +113,7 @@ struct ChannelView: View {
 						}
 					}
 				}
-			} else if isFetchingNewData || isLoading {
+			} else if isLoading {
 				ProgressView("Loading channel...")
 					.frame(maxWidth: .infinity, maxHeight: .infinity)
 			} else if let errorMessage = errorMessage {
@@ -134,19 +130,14 @@ struct ChannelView: View {
 				print("Channel updated: \(ch.title) (ID: \(ch.id))")
 			}
 		}
-
 	}
 
 	private func fetchChannel() async {
-		isFetchingNewData = true
-		lastChannel = channel // keep old data
 		do {
-			let newChannel = try await ContentService.shared.getChannel(id: currentChannelID)
-			channel = newChannel
+			channel = try await ContentService.shared.getChannel(id: currentChannelID)
 		} catch {
 			errorMessage = error.localizedDescription
 		}
-		isFetchingNewData = false
 		isLoading = false
 	}
 }
@@ -156,61 +147,142 @@ struct AddToPlaylistButton: View {
 	@Environment(\.modelContext) private var modelContext
 	@Query(sort: \Playlist.title) private var playlists: [Playlist]
 
-	@State private var showPlaylistMenu: Bool = false
 	@State private var showCreateNew: Bool = false
 	@State private var newPlaylistName: String = ""
+	@State private var showPickerPopover: Bool = false
+	@State private var popoverAnchorID = UUID()
+	@State private var isCreatingInline: Bool = false
+
+	@ViewBuilder
+	private func playlistPickerContent() -> some View {
+		VStack(alignment: .leading, spacing: 8) {
+			HStack {
+				if isCreatingInline {
+					Button(action: { withAnimation { isCreatingInline = false } }) {
+						Image(systemName: "chevron.left")
+					}
+					.buttonStyle(.plain)
+				}
+				Text(isCreatingInline ? "Create Playlist" : "Add to Playlist")
+					.font(.headline)
+				Spacer()
+			}
+			Divider()
+
+			if isCreatingInline {
+				VStack(alignment: .leading, spacing: 8) {
+					TextField("Playlist Name", text: $newPlaylistName)
+						.textFieldStyle(.roundedBorder)
+					HStack {
+						Button("Cancel") {
+							withAnimation {
+								isCreatingInline = false
+								newPlaylistName = ""
+							}
+						}
+						Spacer()
+						Button("Create") {
+							createPlaylistAndAdd()
+							// Close popover after creation
+							showPickerPopover = false
+							isCreatingInline = false
+							newPlaylistName = ""
+						}
+						.keyboardShortcut(.defaultAction)
+						.disabled(newPlaylistName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+					}
+				}
+				.padding(.vertical, 4)
+			} else {
+				if playlists.isEmpty {
+					Text("No playlists yet").foregroundStyle(.secondary)
+				} else {
+					ScrollView {
+						VStack(alignment: .leading, spacing: 4) {
+							ForEach(playlists) { playlist in
+								Button(action: {
+									addToPlaylist(playlist)
+									showPickerPopover = false
+								}) {
+									HStack {
+										Image(systemName: "folder")
+										Text(playlist.title)
+										Spacer()
+									}
+									.padding(6)
+								}
+								.buttonStyle(.plain)
+								.background(RoundedRectangle(cornerRadius: 6).fill(Color(nsColor: .controlAccentColor).opacity(0.08)).opacity(0))
+							}
+						}
+						.padding(.vertical, 4)
+					}
+					.frame(maxHeight: 220)
+				}
+				Divider()
+				HStack {
+					Button("Create New Playlist") {
+						withAnimation { isCreatingInline = true }
+					}
+					Spacer()
+				}
+			}
+		}
+		.padding(12)
+		.frame(minWidth: 280)
+	}
 
 	var body: some View {
 		HStack(spacing: 0) {
-			// Main "Add to Playlist" button
-			Button(action: addToDefault) {
-				Label("Add to Playlist", systemImage: "plus")
-					.padding(.vertical, 6)
-					.padding(.horizontal, 12)
-					.background(Color.blue)
-					.foregroundColor(.white)
-//					.cornerRadius(4, corners: [.topLeft, .bottomLeft])
-			}
-
-			// Menu button (dots)
-			Menu {
-				ForEach(playlists) { playlist in
-					Button(playlist.title) {
-						addToPlaylist(playlist)
+			// Unified segmented container
+			HStack(spacing: 0) {
+				// Left segment: Save (default or picker)
+				Button(action: {
+					// Try default; if none, open picker
+					do {
+						if let defaultPlaylistID = try Settings.shared(context: modelContext).defaultPlaylistID,
+						   let playlist = playlists.first(where: { $0.id == defaultPlaylistID }) {
+							addToPlaylist(playlist)
+						} else {
+							showPickerPopover = true
+						}
+					} catch {
+						showPickerPopover = true
 					}
+				}) {
+					HStack(spacing: 6) {
+						Image(systemName: "tray.and.arrow.down")
+						Text("Save")
+					}
+					.frame(height: 28)
+					.padding(.horizontal, 10)
+					.contentShape(Rectangle())
 				}
-				Divider()
-				Button("Create New Playlist") {
-					showCreateNew = true
+				.buttonStyle(.plain)
+				.background(Color.blue)
+				.foregroundColor(.white)
+
+				// Right segment: always open picker
+				Button(action: {
+					showPickerPopover = true
+				}) {
+					Image(systemName: "chevron.down")
+						.frame(width: 30, height: 28)
+						.contentShape(Rectangle())
 				}
-			} label: {
-				Image(systemName: "ellipsis")
-					.padding(.vertical, 6)
-					.padding(.horizontal, 8)
-					.background(Color.blue)
-					.foregroundColor(.white)
+				.buttonStyle(.plain)
+				.background(Color.blue.opacity(0.95))
+				.foregroundColor(.white)
 			}
-//			.cornerRadius(4, corners: [.topRight, .bottomRight])
+			.clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+			.overlay(
+				RoundedRectangle(cornerRadius: 6, style: .continuous)
+					.stroke(Color.blue.opacity(0.9), lineWidth: 0)
+			)
+			.id(popoverAnchorID) // stable anchor for popover
 		}
-		.sheet(isPresented: $showCreateNew) {
-			VStack {
-				Text("Create New Playlist")
-					.font(.headline)
-				TextField("Playlist Name", text: $newPlaylistName)
-					.textFieldStyle(.roundedBorder)
-					.padding()
-				Button("Create") {
-					createPlaylistAndAdd()
-					showCreateNew = false
-					newPlaylistName = ""
-				}
-				.padding()
-				Button("Cancel") {
-					showCreateNew = false
-					newPlaylistName = ""
-				}
-			}
-			.padding()
+		.popover(isPresented: $showPickerPopover, arrowEdge: .bottom) {
+			playlistPickerContent()
 		}
 	}
 
@@ -220,12 +292,10 @@ struct AddToPlaylistButton: View {
 			   let playlist = playlists.first(where: { $0.id == defaultPlaylistID }) {
 				addToPlaylist(playlist)
 			} else {
-				// No default: open menu
-				showPlaylistMenu = true
+				showPickerPopover = true
 			}
 		} catch {
-			print("Failed to fetch settings: \(error)")
-			showPlaylistMenu = true
+			showPickerPopover = true
 		}
 	}
 

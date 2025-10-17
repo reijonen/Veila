@@ -10,16 +10,17 @@ struct PlaylistOverviewView: View {
 
 	var body: some View {
 		Group {
-			ForEach(playlists) { playlist in
-				Button(action: {
-					self.currentPlaylistID = playlist.id
-					self.selection = SidebarSelection.playlist
-				}) {
-					Text(playlist.title)
-//					NavigationLink(destination: PlaylistDetailView(playlist: playlist)) {
-//						Text(playlist.title)
-//					}
+			if playlists.count != 0 {
+				ForEach(playlists) { playlist in
+					Button(action: {
+						self.currentPlaylistID = playlist.id
+						self.selection = SidebarSelection.playlist
+					}) {
+						Text(playlist.title)
+					}
 				}
+			} else {
+				Text("No playlists yet")
 			}
 		}
 	}
