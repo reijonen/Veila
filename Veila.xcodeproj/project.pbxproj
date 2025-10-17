@@ -3790,7 +3790,17 @@
 				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/_tab.py",
 				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/_video.py",
 				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/pot/__init__.py",
+				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/pot/__pycache__/__init__.cpython-314.pyc",
+				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/pot/__pycache__/_director.cpython-314.pyc",
+				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/pot/__pycache__/_provider.cpython-314.pyc",
+				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/pot/__pycache__/_registry.cpython-314.pyc",
+				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/pot/__pycache__/cache.cpython-314.pyc",
+				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/pot/__pycache__/provider.cpython-314.pyc",
+				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/pot/__pycache__/utils.cpython-314.pyc",
 				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/pot/_builtin/__init__.py",
+				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/pot/_builtin/__pycache__/__init__.cpython-314.pyc",
+				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/pot/_builtin/__pycache__/memory_cache.cpython-314.pyc",
+				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/pot/_builtin/__pycache__/webpo_cachespec.cpython-314.pyc",
 				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/pot/_builtin/memory_cache.py",
 				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/pot/_builtin/webpo_cachespec.py",
 				"venv/lib/python3.14/site-packages/yt_dlp/extractor/youtube/pot/_director.py",
@@ -3893,7 +3903,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				History.swift,
-				Playlists.swift,
 			);
 			target = 97FE894A2E9AED9400AFD4AC /* Veila */;
 		};
@@ -4332,7 +4341,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.gardenroad.Stories;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sor.Veila;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				REGISTER_APP_GROUPS = YES;
@@ -4388,7 +4397,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.gardenroad.Stories;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sor.Veila;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				REGISTER_APP_GROUPS = YES;

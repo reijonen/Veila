@@ -122,10 +122,6 @@ struct SearchView: View {
 				.frame(maxWidth: .infinity, maxHeight: .infinity)
 			} else if searchResults.isEmpty {
 				VStack(spacing: 16) {
-//					Image(systemName: "magnifyingglass.circle")
-//						.resizable()
-//						.frame(width: 60, height: 60)
-//						.foregroundColor(.gray)
 					Text("No results found")
 						.font(.headline)
 						.foregroundColor(.gray)
@@ -138,6 +134,8 @@ struct SearchView: View {
 						currentVideoID = video.id
 					}) {
 						VideoRowView(video: video, selection: $selection, currentChannelID: $currentChannelID)
+
+//						VideoRow(video: video, selection: $selection, currentChannelID: $currentChannelID)
 					}
 					.buttonStyle(PlainButtonStyle())
 				}

@@ -1,32 +1,15 @@
 import SwiftUI
 import AVKit
 
-struct YtDlpHeaders: Codable {
-	let userAgent: String
-	let accept: String
-	let acceptLanguage: String
-	let secFetchMode: String
-
-	enum CodingKeys: String, CodingKey {
-		case userAgent = "User-Agent"
-		case accept = "Accept"
-		case acceptLanguage = "Accept-Language"
-		case secFetchMode = "Sec-Fetch-Mode"
-	}
-}
-
-
 struct Test: Codable {
 	let streamURL: URL
-	let headers: YtDlpHeaders
 
 	enum CodingKeys: String, CodingKey {
 		case streamURL = "stream_url"
-		case headers
 	}
 }
 
-struct SkipSegment: Codable {
+struct SkipSegmentDTO: Codable {
 	let category: String
 	let actionType: String
 	let segment: [Double]
@@ -42,7 +25,7 @@ struct WatchVideoView: View {
 
 	@State private var player: AVPlayer = AVPlayer()
 	@State private var isLoading = true
-	@State private var skipSegments: [SkipSegment] = []
+	@State private var skipSegments: [SkipSegmentDTO] = []
 	@State private var errorMessage: String? = nil
 	@State private var timeObserver: Any?
 
@@ -120,18 +103,6 @@ struct WatchVideoView: View {
 		do {
 			let video = try await ContentService.shared.getVideo(id: self.videoID)
 			print("stream url:", video.streamURL)
-			
-
-//			print (video.headers)
-//
-			let headersDict: [String: String] = [
-				"User-Agent": video.headers.userAgent,
-				"Accept": video.headers.accept,
-				"Accept-Language": video.headers.acceptLanguage,
-				"Sec-Fetch-Mode": video.headers.secFetchMode
-			]
-
-			// Optional priming
 
 			do {
 				let segments = try await ContentService.shared.getSkipSegments(id: self.videoID)
@@ -143,7 +114,7 @@ struct WatchVideoView: View {
 				print("Failed to extract skip segments for video with ID '\(self.videoID)': \(error).\nProceeding with no skip segments.")
 			}
 
-			await resilientPlay(url: video.streamURL, maxRetries: 100, headers: headersDict)
+			await resilientPlay(url: video.streamURL, maxRetries: 100)
 		} catch {
 			self.errorMessage = error.localizedDescription
 			self.isLoading = false
@@ -151,7 +122,7 @@ struct WatchVideoView: View {
 	}
 
 	@MainActor
-	func resilientPlay(url: URL, maxRetries: Int = 5, headers: [String: String]) async {
+	func resilientPlay(url: URL, maxRetries: Int = 5) async {
 		var attempt = 0
 		var playbackStarted = false
 
@@ -166,24 +137,11 @@ struct WatchVideoView: View {
 			playbackStarted = false
 			print("▶️ Starting playback (attempt \(attempt + 1))")
 
-//			var request = URLRequest(url: url)
-//			request.allHTTPHeaderFields = headers
-//			let (data, res): (Data, URLResponse) = try! await URLSession.shared.data(for: request)
-//			print("DATA:", data)
-//			print("res:", res)
-
 			let item = AVPlayerItem(url: url)
 			cleanupObservers() // clean old ones before replacing
 			player.automaticallyWaitsToMinimizeStalling = false
 			player.replaceCurrentItem(with: item)
 			player.play()
-
-//			let asset = AVURLAsset(url: url, options: ["AVURLAssetHTTPHeaderFieldsKey": headers])
-//			let item = AVPlayerItem(asset: asset)
-//			cleanupObservers()
-//			player.replaceCurrentItem(with: item)
-//			player.play()
-//
 
 			// observe item notifications
 			itemObservers.append(NotificationCenter.default.addObserver(

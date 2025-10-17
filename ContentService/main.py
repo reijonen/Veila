@@ -139,10 +139,11 @@ def get_channel(id: str):
 
 @app.get("/video/{id}")
 def get_video(id: str):
-	cache_key = f"video:{id}"
-	cached = cache.get(cache_key)
-	if cached:
-		return cached
+    # TODO: right now only used to fetch stream url so cannot cache
+	# cache_key = f"video:{id}"
+	# cached = cache.get(cache_key)
+	# if cached:
+	# 	return cached
 
 	ydl_opts = {
 		"skip_download": True,
@@ -170,20 +171,20 @@ def get_video(id: str):
 			default=None
 		)
 
-		headers = best_format.get("http_headers", {})
-
 		result = {
 			"stream_url": best_format["url"],
-			"headers": headers
 		}
 
-		cache.set(cache_key, result, None)
+		# cache.set(cache_key, result, None)
 
 		return result
 
 # TODO: channel_id vois käyttää sub-napin lisäämiseen
 @app.post("/search")
 def search(q: str):
+	if len(q) == 0:
+		return []
+
 	cache_key = f"search:{q}"
 	cached = cache.get(cache_key)
 	if cached:

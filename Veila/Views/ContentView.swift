@@ -29,20 +29,20 @@ struct ContentView: View {
 	private var content: some View {
 		switch selection {
 			case .subscriptions:
-				SubscriptionsView()
-			case .channel:
-				ChannelView(currentChannelID: $currentChannelID, currentVideoID: $currentVideoID, selection: $selection)
-//					.id(currentChannelID)
+				SubscriptionsOverviewView()
 			case .search:
 				SearchView(isSearching: $isSearching, searchResults: $searchResults, selection: $selection, currentVideoID: $currentVideoID, currentChannelID: $currentChannelID)
 			case .playlistOverview:
 				PlaylistOverviewView(selection: $selection, currentPlaylistID: $currentPlaylistID)
+			case .history:
+				Text("history")
+			case .channel:
+				ChannelView(currentChannelID: $currentChannelID, currentVideoID: $currentVideoID, selection: $selection)
+					.id(currentChannelID)
 			case .playlist:
 				PlaylistView(currentPlaylistID: $currentPlaylistID, currentVideoID: $currentVideoID, selection: $selection)
-//				HistoryView()
 			case .watchVideo:
 				WatchVideoView(videoID: $currentVideoID)
-//					.id(currentVideoID)
 		}
 	}
 }

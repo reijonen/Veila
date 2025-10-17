@@ -89,7 +89,7 @@ final class ContentService {
 		return try JSONDecoder().decode(Channel.self, from: data)
 	}
 
-	func getSkipSegments(id: String) async throws -> [SkipSegment]? {
+	func getSkipSegments(id: String) async throws -> [SkipSegmentDTO]? {
 		let url = URL(string: "https://sponsor.ajay.app/api/skipSegments")!
 		var components = URLComponents(url: url, resolvingAgainstBaseURL: false)!
 		components.queryItems = [URLQueryItem(name: "videoID", value: id)]
@@ -100,7 +100,7 @@ final class ContentService {
 		if let httpResponse = res as? HTTPURLResponse {
 			switch httpResponse.statusCode {
 				case 200:
-					return try JSONDecoder().decode([SkipSegment].self, from: data)
+					return try JSONDecoder().decode([SkipSegmentDTO].self, from: data)
 				default:
 					return nil
 			}
