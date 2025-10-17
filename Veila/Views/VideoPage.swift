@@ -1,25 +1,6 @@
 import SwiftUI
 import AVKit
 
-struct Test: Codable {
-	let streamURL: URL
-
-	enum CodingKeys: String, CodingKey {
-		case streamURL = "stream_url"
-	}
-}
-
-struct SkipSegmentDTO: Codable {
-	let category: String
-	let actionType: String
-	let segment: [Double]
-	let UUID: String
-	let videoDuration: Double
-	let locked: Int
-	let votes: Int
-	let description: String
-}
-
 struct WatchVideoView: View {
 	@Binding var videoID: String
 
@@ -31,7 +12,6 @@ struct WatchVideoView: View {
 
 	@State private var playerObservers: [NSKeyValueObservation] = []
 	@State private var itemObservers: [NSObjectProtocol] = []
-
 
 	var body: some View {
 		ZStack {

@@ -65,7 +65,7 @@ final class ContentService {
 		print("Warning: ytserver did not respond in time")
 	}
 
-	func search(query: String) async throws -> [Video] {
+	func search(query: String) async throws -> [VideoDTO] {
 		await waitUntilServerIsReady()
 
 		let url = baseURL.appendingPathComponent("search")
@@ -75,11 +75,11 @@ final class ContentService {
 		req.httpMethod = "POST"
 
 		let (data, _) = try await URLSession.shared.data(for: req)
-		return try JSONDecoder().decode([Video].self, from: data)
+		return try JSONDecoder().decode([VideoDTO].self, from: data)
 	}
 
 //	TODO: fix return type
-	func getVideo(id: String) async throws -> Test {
+	func getVideo(id: String) async throws -> VideoStreamDTO {
 		let url = baseURL.appendingPathComponent("video/\(id)")
 		let req = URLRequest(url: url)
 
@@ -91,7 +91,7 @@ final class ContentService {
 
 		switch httpResponse.statusCode {
 		case 200:
-			return try JSONDecoder().decode(Test.self, from: data)
+			return try JSONDecoder().decode(VideoStreamDTO.self, from: data)
 		case 403:
 			throw VideoError.ageRestricted
 //		case 404:
@@ -102,12 +102,12 @@ final class ContentService {
 		}
 	}
 	
-	func getChannel(id: String) async throws -> Channel {
+	func getChannel(id: String) async throws -> ChannelDTO {
 		let url = baseURL.appendingPathComponent("channel/\(id)")
 		let req = URLRequest(url: url)
 
 		let (data, _) = try await URLSession.shared.data(for: req)
-		return try JSONDecoder().decode(Channel.self, from: data)
+		return try JSONDecoder().decode(ChannelDTO.self, from: data)
 	}
 
 	func getSkipSegments(id: String) async throws -> [SkipSegmentDTO]? {

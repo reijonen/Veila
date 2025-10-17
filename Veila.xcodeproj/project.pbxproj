@@ -3899,24 +3899,9 @@
 			);
 			target = 97FE894A2E9AED9400AFD4AC /* Veila */;
 		};
-		9740E74E2E9DAAD40073B558 /* Exceptions for "TODO" folder in "Veila" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				History.swift,
-			);
-			target = 97FE894A2E9AED9400AFD4AC /* Veila */;
-		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		9740E7462E9DA9B20073B558 /* TODO */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				9740E74E2E9DAAD40073B558 /* Exceptions for "TODO" folder in "Veila" target */,
-			);
-			path = TODO;
-			sourceTree = "<group>";
-		};
 		97CEEBCB2E9D7DC6001EB370 /* ContentService */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -3980,7 +3965,6 @@
 				97FE895D2E9AED9500AFD4AC /* VeilaTests */,
 				97FE89672E9AED9500AFD4AC /* VeilaUITests */,
 				97FE894C2E9AED9400AFD4AC /* Products */,
-				9740E7462E9DA9B20073B558 /* TODO */,
 			);
 			sourceTree = "<group>";
 		};
@@ -4010,7 +3994,6 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				9740E7462E9DA9B20073B558 /* TODO */,
 				97CEEBCB2E9D7DC6001EB370 /* ContentService */,
 				97FE894D2E9AED9400AFD4AC /* Veila */,
 			);

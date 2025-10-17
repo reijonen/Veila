@@ -1,25 +1,28 @@
 import Foundation
+import SwiftData
 
-struct Video: Codable, Identifiable, Hashable {
-    let id: String
-    let title: String
-	let channelID: String
-	let uploader: String
-	let duration: Double?
-	let views: UInt
-	let isLive: Bool
-    let thumbnail: URL
-	let streamURL: URL?
+@Model
+class Video {
+	var id: String
+	var title: String
+	var channelID: String
+	var uploader: String
+	var duration: Double?
+	var views: UInt
+	var isLive: Bool
+	var thumbnail: URL
+	var streamURL: URL?
 
-    enum CodingKeys: String, CodingKey {
-        case id
-        case title
-		case channelID = "channel_id"
-		case uploader
-		case duration
-		case views
-		case isLive = "is_live"
-		case thumbnail
-		case streamURL = "stream_url"
-    }
+	init(dto: VideoDTO) {
+		self.id = dto.id
+		self.title = dto.title
+		self.channelID = dto.channelID
+		self.uploader = dto.uploader
+		self.duration = dto.duration
+		self.views = dto.views
+		self.isLive = dto.isLive
+		self.thumbnail = dto.thumbnail
+		self.streamURL = dto.streamURL
+	}
+
 }

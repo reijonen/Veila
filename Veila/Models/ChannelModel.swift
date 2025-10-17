@@ -1,23 +1,23 @@
 import Foundation
 import SwiftData
 
-struct Channel: Codable, Identifiable, Hashable {
-    let id: String
-	let title: String
-	let desc: String
-	let subscribers: UInt
-	let videos: Array<Video>
-	let avatarURL: URL
-	let bannerURL: URL
+@Model
+class Channel {
+	var id: String
+	var title: String
+	var desc: String
+	var subscribers: UInt
+	var videos: Array<Video>
+	var avatarURL: URL
+	var bannerURL: URL
 
-	enum CodingKeys: String, CodingKey {
-		case id
-		case title
-		case desc
-		case subscribers
-		case videos
-		case avatarURL = "avatar_url"
-		case bannerURL = "banner_url"
+	init(id: String, title: String, desc: String, subscribers: UInt, videos: Array<Video>, avatarURL: URL, bannerURL: URL) {
+		self.id = id
+		self.title = title
+		self.desc = desc
+		self.subscribers = subscribers
+		self.videos = videos
+		self.avatarURL = avatarURL
+		self.bannerURL = bannerURL
 	}
-
 }
