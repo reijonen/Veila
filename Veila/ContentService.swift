@@ -1,6 +1,12 @@
 import Foundation
 import SwiftUI
 
+enum VideoError: Error {
+	case ageRestricted
+//	case notFound
+	case serverError(String)
+}
+
 final class ContentService {
 	static let shared = ContentService()
 	private let baseURL = URL(string: "http://127.0.0.1:8777")!
@@ -77,10 +83,25 @@ final class ContentService {
 		let url = baseURL.appendingPathComponent("video/\(id)")
 		let req = URLRequest(url: url)
 
-		let (data, _) = try await URLSession.shared.data(for: req)
-		return try JSONDecoder().decode(Test.self, from: data)
-	}
+		let (data, response) = try await URLSession.shared.data(for: req)
 
+		guard let httpResponse = response as? HTTPURLResponse else {
+			throw VideoError.serverError("Invalid response")
+		}
+
+		switch httpResponse.statusCode {
+		case 200:
+			return try JSONDecoder().decode(Test.self, from: data)
+		case 403:
+			throw VideoError.ageRestricted
+//		case 404:
+//			throw VideoError.notFound
+		default:
+			let message = String(data: data, encoding: .utf8) ?? "Unknown server error"
+			throw VideoError.serverError(message)
+		}
+	}
+	
 	func getChannel(id: String) async throws -> Channel {
 		let url = baseURL.appendingPathComponent("channel/\(id)")
 		let req = URLRequest(url: url)

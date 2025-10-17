@@ -55,6 +55,18 @@ struct WatchVideoView: View {
 		.onAppear {
 			Task {
 				await play()
+
+				do {
+					let segments = try await ContentService.shared.getSkipSegments(id: self.videoID)
+					if segments != nil {
+						self.skipSegments = segments!
+						monitorSkipSegments()
+					}
+					print("Skip segments:", self.skipSegments)
+				} catch {
+					print("Failed to extract skip segments for video with ID '\(self.videoID)': \(error).\nProceeding with no skip segments.")
+				}
+
 			}
 		}
 		.onDisappear {
@@ -104,21 +116,15 @@ struct WatchVideoView: View {
 			let video = try await ContentService.shared.getVideo(id: self.videoID)
 			print("stream url:", video.streamURL)
 
-			do {
-				let segments = try await ContentService.shared.getSkipSegments(id: self.videoID)
-				if segments != nil {
-					self.skipSegments = segments!
-				}
-				print("Skip segments:", self.skipSegments)
-			} catch {
-				print("Failed to extract skip segments for video with ID '\(self.videoID)': \(error).\nProceeding with no skip segments.")
-			}
-
 			await resilientPlay(url: video.streamURL, maxRetries: 100)
+
+		} catch VideoError.ageRestricted {
+			self.errorMessage = "Video is age-restricted."
 		} catch {
 			self.errorMessage = error.localizedDescription
-			self.isLoading = false
 		}
+
+		self.isLoading = false
 	}
 
 	@MainActor
@@ -208,7 +214,6 @@ struct WatchVideoView: View {
 				attempt += 1
 			} else {
 				print("✅ Playback confirmed active")
-				monitorSkipSegments()
 				return
 			}
 		}

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Response
+from fastapi import FastAPI, Response, HTTPException
 from pydantic import BaseModel
 import yt_dlp
 import uvicorn
@@ -6,6 +6,7 @@ from typing import Optional
 import time
 from sqlitedict import SqliteDict
 import json
+from yt_dlp.utils import DownloadError
 
 class SQLiteCache:
 	def __init__(self):
@@ -139,7 +140,7 @@ def get_channel(id: str):
 
 @app.get("/video/{id}")
 def get_video(id: str):
-    # TODO: right now only used to fetch stream url so cannot cache
+	# TODO: right now only used to fetch stream url so cannot cache
 	# cache_key = f"video:{id}"
 	# cached = cache.get(cache_key)
 	# if cached:
@@ -151,33 +152,45 @@ def get_video(id: str):
 	}
 #			[ext=mp4][acodec!=none][vcodec!=none]
 
-
-	with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-		info = ydl.extract_info(f"https://www.youtube.com/watch?v={id}")
-
-		print("FORMATS:", info.get("formats"))
-
-		progressive_formats = [
-			f for f in info.get("formats")
-			if f.get("acodec") != "none"
-			and f.get("vcodec") != "none"
-			and f.get("ext") == "mp4"   # only MP4 files
-			and not f.get("protocol", "").startswith("m3u8")  # skip HLS
-		]
-
-		best_format = max(
-			progressive_formats,
-			key=lambda f: f.get("height", 0),
-			default=None
+	try:
+		with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+			info = ydl.extract_info(f"https://www.youtube.com/watch?v={id}")
+	except DownloadError as e:
+		# Detect age/gate/auth errors specifically
+		if "Sign in to confirm your age" in str(e):
+			raise HTTPException(
+				status_code=403,
+				detail="Video age-restricted. Authentication (cookies) required."
+			)
+		# Generic yt-dlp download error
+		raise HTTPException(
+			status_code=500,
+			detail=f"Failed to fetch video info: {str(e)}"
 		)
 
-		result = {
-			"stream_url": best_format["url"],
-		}
+	print("FORMATS:", info.get("formats"))
 
-		# cache.set(cache_key, result, None)
+	progressive_formats = [
+		f for f in info.get("formats")
+		if f.get("acodec") != "none"
+		and f.get("vcodec") != "none"
+		and f.get("ext") == "mp4"   # only MP4 files
+		and not f.get("protocol", "").startswith("m3u8")  # skip HLS
+	]
 
-		return result
+	best_format = max(
+		progressive_formats,
+		key=lambda f: f.get("height", 0),
+		default=None
+	)
+
+	result = {
+		"stream_url": best_format["url"],
+	}
+
+	# cache.set(cache_key, result, None)
+
+	return result
 
 # TODO: channel_id vois käyttää sub-napin lisäämiseen
 @app.post("/search")
