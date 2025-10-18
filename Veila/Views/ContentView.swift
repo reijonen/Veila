@@ -5,7 +5,7 @@ struct ContentView: View {
 	@State private var selection: SidebarSelection = .subscriptions
 
 	@State private var isSearching: Bool = false
-	@State private var searchResults: [Video] = []
+	@State private var searchResults: [VideoDTO] = []
 
 	@State private var currentChannelID: String = ""
 	@State private var currentVideoID: String = ""
@@ -35,7 +35,7 @@ struct ContentView: View {
 			case .playlistOverview:
 				PlaylistOverviewView(selection: $selection, currentPlaylistID: $currentPlaylistID)
 			case .history:
-				Text("history")
+				HistoryView()
 			case .channel:
 				ChannelView(currentChannelID: $currentChannelID, currentVideoID: $currentVideoID, selection: $selection)
 					.id(currentChannelID)

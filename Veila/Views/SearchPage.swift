@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 
 struct VideoRowView: View {
-	let video: Video
+	let video: VideoDTO
 
 	@Binding var selection: SidebarSelection
 	@Binding var currentChannelID: String
@@ -105,7 +105,7 @@ struct VideoRowView: View {
 
 struct SearchView: View {
 	@Binding var isSearching: Bool
-	@Binding var searchResults: [Video]
+	@Binding var searchResults: [VideoDTO]
 	@Binding var selection: SidebarSelection
 	@Binding var currentVideoID: String
 	@Binding var currentChannelID: String

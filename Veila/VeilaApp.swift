@@ -18,13 +18,16 @@ extension Settings {
 }
 @main
 struct VeilaApp: App {
-	var sharedModelContainer: ModelContainer = {
+	init() {
 		ContentService.shared.startPythonServer()
+	}
 
+	var sharedModelContainer: ModelContainer = {
         let schema = Schema([
 			Settings.self,
 			Subscription.self,
-			Playlist.self
+			Playlist.self,
+			HistoryItem.self,
         ])
         
         let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)

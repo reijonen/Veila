@@ -11,13 +11,17 @@ class Channel {
 	var avatarURL: URL
 	var bannerURL: URL
 
-	init(id: String, title: String, desc: String, subscribers: UInt, videos: Array<Video>, avatarURL: URL, bannerURL: URL) {
-		self.id = id
-		self.title = title
-		self.desc = desc
-		self.subscribers = subscribers
+	init(dto: ChannelDTO) {
+		self.id = dto.id
+		self.title = dto.title
+		self.desc = dto.desc
+		self.subscribers = dto.subscribers
+		var videos: [Video] = []
+		for videoDTO in dto.videos {
+			videos.append(Video(dto: videoDTO))
+		}
 		self.videos = videos
-		self.avatarURL = avatarURL
-		self.bannerURL = bannerURL
+		self.avatarURL = dto.avatarURL
+		self.bannerURL = dto.bannerURL
 	}
 }

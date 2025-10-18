@@ -5,7 +5,7 @@ struct SearchBarView: View {
 
 	@Binding var selection: SidebarSelection
 	@Binding var isSearching: Bool
-	@Binding var searchResults: Array<Video>
+	@Binding var searchResults: Array<VideoDTO>
 
 	var body: some View {
 		TextField("Search", text: $searchText)

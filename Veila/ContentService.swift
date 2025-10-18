@@ -79,7 +79,7 @@ final class ContentService {
 	}
 
 //	TODO: fix return type
-	func getVideo(id: String) async throws -> VideoStreamDTO {
+	func getVideo(id: String) async throws -> VideoDTO {
 		let url = baseURL.appendingPathComponent("video/\(id)")
 		let req = URLRequest(url: url)
 
@@ -91,7 +91,7 @@ final class ContentService {
 
 		switch httpResponse.statusCode {
 		case 200:
-			return try JSONDecoder().decode(VideoStreamDTO.self, from: data)
+			return try JSONDecoder().decode(VideoDTO.self, from: data)
 		case 403:
 			throw VideoError.ageRestricted
 //		case 404:

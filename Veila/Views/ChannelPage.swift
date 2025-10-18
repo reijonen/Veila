@@ -134,7 +134,8 @@ struct ChannelView: View {
 
 	private func fetchChannel() async {
 		do {
-			channel = try await ContentService.shared.getChannel(id: currentChannelID)
+			let dto = try await ContentService.shared.getChannel(id: currentChannelID)
+			channel = Channel(dto: dto)
 		} catch {
 			errorMessage = error.localizedDescription
 		}

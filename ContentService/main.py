@@ -34,6 +34,7 @@ cache = SQLiteCache()
 class Video(BaseModel):
 	id: str
 	title: str
+	channel_id: str
 	uploader: str
 	duration: Optional[float]
 	views: int
@@ -168,7 +169,7 @@ def get_video(id: str):
 			detail=f"Failed to fetch video info: {str(e)}"
 		)
 
-	print("FORMATS:", info.get("formats"))
+#	print("FORMATS:", info.get("formats"))
 
 	progressive_formats = [
 		f for f in info.get("formats")
@@ -184,13 +185,47 @@ def get_video(id: str):
 		default=None
 	)
 
-	result = {
-		"stream_url": best_format["url"],
-	}
+#TODO: debug only
+	info["formats"] = None
+
+	print("Video:", info)
+
+	raw_title = info.get("title")
+	if raw_title.isupper() and not raw_title.islower():
+		title = raw_title.lower().capitalize()
+	else:
+		title = raw_title
+
+	live_status = info.get("live_status")
+	is_live = live_status not in (None, "was_live", False, "not_live")
+
+	duration = None if is_live else info.get("duration")
+
+	if is_live:
+		print("concurrent_view_count", info.get("concurrent_view_count"))
+	else:
+		print("view_count", info.get("view_count", 0))
+
+	views = info.get("concurrent_view_count") if is_live else info.get("view_count", 0)
+
+	thumbnails = info.get("thumbnails")
+	thumbnail_url = thumbnails[-1]["url"] if thumbnails else "" # error
+
+	video = Video(
+		id=info.get("id"),
+		title=title,
+		channel_id=info.get("channel_id"),
+		uploader=info.get("uploader"),
+		duration=duration,
+		views=views,
+		is_live=is_live,
+		thumbnail=thumbnail_url,
+		stream_url=best_format["url"]
+	)
 
 	# cache.set(cache_key, result, None)
 
-	return result
+	return video
 
 # TODO: channel_id vois käyttää sub-napin lisäämiseen
 @app.post("/search")

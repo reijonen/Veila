@@ -1,7 +1,10 @@
 import SwiftUI
+import SwiftData
 import AVKit
 
 struct WatchVideoView: View {
+	@Environment(\.modelContext) private var modelContext
+
 	@Binding var videoID: String
 
 	@State private var player: AVPlayer = AVPlayer()
@@ -12,6 +15,20 @@ struct WatchVideoView: View {
 
 	@State private var playerObservers: [NSKeyValueObservation] = []
 	@State private var itemObservers: [NSObjectProtocol] = []
+
+	@State private var historyItem: HistoryItem? = nil
+
+	@State private var video: Video? = nil
+
+	@State private var lastSave: Date? = nil
+
+	func updateDuration(_ duration: Double) {
+		historyItem!.duration = duration
+		if Date().timeIntervalSince(lastSave!) > 10 {
+			try? modelContext.save()
+			lastSave = Date()
+		}
+	}
 
 	var body: some View {
 		ZStack {
@@ -34,7 +51,23 @@ struct WatchVideoView: View {
 		}
 		.onAppear {
 			Task {
-				await play()
+				do {
+					let videoDTO = try await ContentService.shared.getVideo(id: videoID)
+
+					self.video = Video(dto: videoDTO)
+					self.historyItem = HistoryItem(video: video!)
+
+					modelContext.insert(historyItem!)
+					try? modelContext.save()
+					lastSave = Date()
+
+					print("Playing video:", self.video!)
+					await play()
+				} catch VideoError.ageRestricted {
+					self.errorMessage = "Video is age-restricted."
+				} catch {
+					self.errorMessage = error.localizedDescription
+				}
 
 				do {
 					let segments = try await ContentService.shared.getSkipSegments(id: self.videoID)
@@ -74,6 +107,8 @@ struct WatchVideoView: View {
 
 		let interval = CMTime(seconds: 1, preferredTimescale: 600)
 		player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { time in
+			updateDuration(time.seconds)
+
 			let currentTime = CMTimeGetSeconds(self.player.currentTime())
 
 			for skip in self.skipSegments {
@@ -92,18 +127,7 @@ struct WatchVideoView: View {
 	}
 
 	func play() async {
-		do {
-			let video = try await ContentService.shared.getVideo(id: self.videoID)
-			print("stream url:", video.streamURL)
-
-			await resilientPlay(url: video.streamURL, maxRetries: 100)
-
-		} catch VideoError.ageRestricted {
-			self.errorMessage = "Video is age-restricted."
-		} catch {
-			self.errorMessage = error.localizedDescription
-		}
-
+		await resilientPlay(url: self.video!.streamURL!, maxRetries: 100)
 		self.isLoading = false
 	}
 
